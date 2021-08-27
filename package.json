@@ -28,8 +28,7 @@
     "eject": "react-scripts eject",
     "prepare": "husky install",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "api-server": "json-server --port 4040 --delay 300 --watch db.json"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
