@@ -1,6 +1,7 @@
 import { useDispatch, connect } from 'react-redux';
 import { useEffect } from 'react';
 import { contactsSelectors, contactsOperations } from 'redux/contacts';
+import { useFetchContacts } from 'redux/contacts/contactSlice';
 import Loader from 'react-loader-spinner';
 import styles from './ContactList.module.css';
 
@@ -10,6 +11,8 @@ const ContactList = ({ contacts, onDeleteContact, isLoadingContacts }) => {
   useEffect(() => {
     dispatch(contactsOperations.fetchContacts());
   }, [dispatch]);
+
+  const { data, isFetching, error } = useFetchContacts();
 
   return (
     <>

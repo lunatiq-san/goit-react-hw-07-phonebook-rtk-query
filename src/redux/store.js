@@ -1,27 +1,19 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import {
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist';
+import { configureStore } from '@reduxjs/toolkit';
 import { contactsReducer } from './contacts';
-
-const middleware = [
-  ...getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
-  }),
-];
+import { pokemonApi } from './pokemon';
+import { contactApi } from './contacts/contactSlice';
 
 const store = configureStore({
   reducer: {
     contacts: contactsReducer,
+    [pokemonApi.reducerPath]: pokemonApi.reducer,
+    [contactApi.reducerPath]: contactApi.reducer,
   },
-  middleware,
+  middleware: getDefaultMiddleware => [
+    ...getDefaultMiddleware(),
+    pokemonApi.middleware,
+    contactApi.middleware,
+  ],
   devtools: process.env.NODE_ENV === 'development',
 });
 
