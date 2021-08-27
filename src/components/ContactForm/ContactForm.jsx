@@ -1,11 +1,17 @@
 import { useState } from 'react';
-import { connect } from 'react-redux';
-import styles from './ContactForm.module.css';
-import { contactsOperations } from 'redux/contacts';
+import {
+  useAddContactMutation,
+  useFetchContactsQuery,
+} from 'redux/contacts/contactSlice';
 
-function ContactForm({ onSubmit, contacts }) {
+import Loader from 'react-loader-spinner';
+import styles from './ContactForm.module.css';
+
+function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const [addContact, { isLoading }] = useAddContactMutation();
+  const { data: contacts } = useFetchContactsQuery();
 
   const handleChange = event => {
     const { name, value } = event.currentTarget;
@@ -36,7 +42,7 @@ function ContactForm({ onSubmit, contacts }) {
     ) {
       alert(`${name} is already in contacts`);
     } else {
-      onSubmit(options);
+      addContact(options);
     }
 
     reset();
@@ -76,19 +82,20 @@ function ContactForm({ onSubmit, contacts }) {
         />
       </label>
 
-      <button className={styles.btn} type="submit">
+      <button className={styles.btn} type="submit" disabled={isLoading}>
         Add contact
+        {isLoading && (
+          <Loader
+            type="Puff"
+            color="#000000"
+            height={25}
+            width={25}
+            className={styles.loader}
+          />
+        )}
       </button>
     </form>
   );
 }
 
-const mapStateToProps = ({ contacts: { items } }) => ({
-  contacts: items,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onSubmit: contact => dispatch(contactsOperations.addContact(contact)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
+export default ContactForm;
